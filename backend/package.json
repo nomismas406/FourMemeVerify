@@ -1,0 +1,12 @@
+{
+  "name": "fourmemeverify",
+  "version": "1.0.0",
+  "main": "app.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.3.2",
+    "web3": "^1.7.5"
+  }
+}

@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/metamaskAuth
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4.4
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"    
+    volumes:
+      - mongo-data:/data/db
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend:/usr/share/nginx/html
+    depends_on:
+      - backend
+
+  bot:
+    build: ./bot
+    container_name: telegram_bot
+    restart: always
+    depends_on:
+      - backend
+    environment:
+      - TELEGRAM_BOT_TOKEN=7924323431:AAETnehjkiD2zQmzy6QI_e5t4IqvmmjhFmA
+      - SERVER_URL=http://10.0.0.39       
+    command: ["node", "bot.js"]
+
+volumes:
+  mongo-data:

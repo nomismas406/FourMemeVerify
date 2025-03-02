@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMask Wallet Verification</title>
+</head>
+<body>
+    <button id="connect">Connect Wallet</button>
+    <button id="verify">Verify Ownership</button>
+    <p id="status"></p>
+
+    <script>
+        const connectButton = document.getElementById("connect");
+        const verifyButton = document.getElementById("verify");
+        const statusText = document.getElementById("status");
+
+        let userAddress;
+
+        connectButton.addEventListener("click", async () => {
+            if (window.ethereum) {
+                try {
+                    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+                    userAddress = accounts[0];
+                    statusText.textContent = "Connected: " + userAddress;
+                } catch (error) {
+                    statusText.textContent = "Connection failed";
+                }
+            } else {
+                statusText.textContent = "MetaMask not detected";
+            }
+        });
+
+        verifyButton.addEventListener("click", async () => {
+            if (!userAddress) {
+                statusText.textContent = "Connect wallet first!";
+                return;
+            }
+
+            const message = "Verify wallet ownership for authentication";
+            const signature = await ethereum.request({
+                method: "personal_sign",
+                params: [message, userAddress],
+            });
+
+            const response = await fetch("http://10.0.0.39:3000/verify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ address: userAddress, signature, message }),
+            });
+
+            const result = await response.json();
+            statusText.textContent = result.message;
+        });
+    </script>
+</body>
+</html>
