@@ -2,5 +2,6 @@
   # running docker-compose
   - name: 'docker/compose:1.26.2'
     args: ['up', '-d']
-options:
-  logging: CLOUD_LOGGING_ONLY
+  options:
+    logging: CLOUD_LOGGING_ONLY  # Options: CLOUD_LOGGING_ONLY, GCS_ONLY, NONE
+    defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
